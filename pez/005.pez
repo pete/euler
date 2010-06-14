@@ -1,0 +1,20 @@
+#! /usr/bin/env pez
+# What is the smallest number that is evenly divisible by all of the numbers
+# from 1 to 20?
+
+# This is easy.  Just a simple loop with lcm.
+
+"math" load-lib
+
+: tiniest-sigma ( n -- smallest-multiple-from-1-to-n )
+	# Yes, but we skip 1.
+	dup 2 do i lcm loop ;
+
+: default-number
+	argc 0= if exit then
+	argv @ strint dup
+	0= if drop exit then
+	nip ;
+
+
+20 default-number tiniest-sigma . cr

@@ -1,0 +1,43 @@
+#! /usr/bin/env pez
+# "Find the 10001st prime"
+# This is a transliteration of the PDF's algorithm; I'm using it as a benchmark.
+
+variable prime'r
+: prime? ( n -- bool )
+	dup 2 < if drop 0 exit then
+	dup 4 < if drop -1 exit then
+	dup 2 mod 0= if drop 0 exit then
+	dup 9 < if drop -1 exit then
+	dup 3 mod 0= if drop 0 exit then
+
+	dup float sqrt floor prime'r !
+	5 ( n f )
+
+	begin
+		dup prime'r @ <=
+	while
+		2dup mod 0= if 2drop 0 exit then
+		2dup 2+ mod 0= if 2drop 0 exit then
+		6 +
+	repeat 2drop -1 ;
+
+variable pcount
+: nth-prime ( n -- primes[n] )
+	1 pcount !
+	1 ( n candidate )
+	begin
+		2+
+		dup prime? if pcount 1+! then
+		over pcount @ = until
+	nip
+;
+
+: atoi strint ;
+
+: which-prime
+	argc
+	0= if 10001 exit then
+	argv @ atoi dup
+	0= if drop 10001 exit then ;
+
+which-prime nth-prime . cr

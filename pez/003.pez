@@ -1,0 +1,29 @@
+#! /usr/bin/env pez
+# Find the largest prime factor of 600851475143.
+# Note that this number is 1 byte too large to fit into a 32-bit int; I'm
+# running this on an x86-64 machine, so the stack is 64 bits wide.
+
+# Factors m out of n, leaves both.
+: factor-out ( n m -- p m )
+	begin
+		2dup mod 0=
+	while
+		swap over / swap
+	repeat ;
+
+: largest-prime-factor ( n -- m )
+	2 factor-out drop
+	1
+	begin
+		2+ 2dup >
+	while
+		factor-out
+	repeat max ;
+
+: which-number
+	argc 0= if 600851475143 exit then
+	argv @ strint dup
+	0= if drop 600851475143 exit then
+	nip ;
+
+which-number largest-prime-factor . cr

@@ -1,0 +1,58 @@
+#! /usr/bin/env pez
+# Find the largest palindromic number that is a product of two three-digit
+# factors.
+
+# For this one, I was a bit surprised at how many things needed to be
+# implemented to get off the ground.  strform is sort of awkward, and buffer
+# management?  Why are we doing that in a GC'd language? TODO
+
+# Another issue is that it is semi-cheating to use string-reversal to check
+# if a number is palindromic, but the math there is trivial and the string
+# version is fast enough.
+
+: reverse-string ( str -- reversed )
+	dup strlen 
+	dup malloc ( str1 len str2 )
+	over +
+	swap 0 do
+		1- 2dup swap
+		c@ swap c!
+		swap 1+ swap
+	loop nip ;
+
+
+# An n-bit number has at most  ceil((n * log(2) / log(10)) digits.  Cells are
+# (8 * cellsize) bits wide.  Then we add one for the null byte.  SIMPLE
+2.0 log 10.0 log f/ cell-size 3 shift float f* ceil 1+ constant bufsize
+
+: dec-string ( n -- str )
+	bufsize malloc dup -rot "%ld" swap strform ;
+
+: palindrome? ( n -- bool )
+	dec-string dup reverse-string strcmp 0= ;
+
+# Returns true if a number can be factored into two three-digit numbers.
+variable tdf'
+: three-digit-factors? ( n -- bool )
+	0 tdf' !
+	999 over float sqrt floor ( n 999 min )
+	do
+		dup i mod 0= if
+			dup i / dup 99 > swap 1000 < and if
+				-1 tdf' ! leave
+			then
+		then
+	loop drop tdf' @ ;
+
+variable n
+: largest-palindrome ( -- n )
+	9999 999 999 * 1+ do
+		i three-digit-factors? if
+			i palindrome? if
+				i n !
+				leave
+			then
+		then
+	-1 +loop n @ ;
+
+largest-palindrome . cr

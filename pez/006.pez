@@ -1,0 +1,26 @@
+#! /usr/bin/env pez
+# What is the different between the sum of the squares of the natural numbers
+# up to 100 and the square of the sum of the natural numbers up to 100?
+
+: sum-squares ( limit )
+	0 swap 1+ 1 do
+		i i * +
+	loop ;
+
+: square-sum ( limit )
+	0 swap 1+ 1 do
+		i +
+	loop dup * ;
+
+# Difference between the sum of the squares and the square of the sum of the
+# natural numbers up to limit.
+: dbssass ( limit -- dbssass )
+	dup square-sum swap sum-squares - ;
+
+: default-number
+	argc 0= if exit then
+	argv @ strint dup
+	0= if drop exit then
+	nip ;
+
+100 default-number dbssass . cr
