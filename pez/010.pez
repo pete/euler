@@ -1,0 +1,51 @@
+#! /usr/bin/env pez
+
+# Find the sum of all primes under 2,000,000.
+
+# There's an example of a sieve in Pez's doc/examples; I just modified it to
+# sum them instead of printing them.
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+2000000 default-number 1+ constant biggest
+biggest 2/ constant sieve-size
+sieve-size malloc constant sieve
+
+# A few words for address translation.  There's a minor optimization here:  we
+# skip all of the even numbers and special-case 2.  These words are for
+# translating back and forth between numbers and addresses in the sieve.
+: >sa ( n -- sieve-address )   2/ 1- sieve + ;
+: >n ( sieve-address -- n )   sieve - 1+ 2* 1+ ;
+
+# As mentioned above, we totally ignore even numbers, including these words, so
+# they rely on not being asked about even numbers.
+: prime? ( n -- t|f )   >sa c@ 0= ;
+: not-prime! ( n -- )   >sa -1 swap c! ;
+
+variable 2n
+: sieve-n ( n -- )
+	# From n*3 (the first odd composite that is a multiple of n) to biggest,
+	# stepping by n*2 (remember, we skip evens):
+	dup 1 shift 2n !
+	biggest swap 3 * do
+		i not-prime!
+	2n @ +loop ;
+
+: sieve-all ( -- )
+	biggest float sqrt ceil 3 do
+		i sieve-n
+	2 +loop ;
+
+variable psum
+: sum-primes ( -- sum )
+	2 psum !
+	biggest 3 do
+		i prime? if i psum +! then
+	2 +loop psum @ ;
+
+sieve-all
+sum-primes . cr
