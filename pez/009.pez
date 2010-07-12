@@ -1,0 +1,55 @@
+#! /usr/bin/env pez
+
+# A Pythagorean triple is a set of three natural numbers, a<b<c, for which
+# a^2 + b^2 = c^2
+# There exists exactly one Pythagorean triple for which a + b + c = 1000.
+# Find the product abc.
+
+# Sorry to disappoint, but this is nearly all comments.  As usual with Project
+# Euler, I was trying to see how far I could go figuring things out to prevent
+# writing a really slow program, and it ended up being easier to work out the
+# solution than to write a program to do it.  (On the up-side, it is the fastest
+# solution I've written yet.)
+
+# We can use the fact that, for the triple (a,b,c), there exists a pair (m,n)
+# such that 
+#	Exactly one of (m,n) is odd
+#	m > n
+# 	a = m^2 - n^2
+#	b = 2mn
+# 	c = m^2 + n^2
+# (The Wikipedia page for Pythagorean triples was pretty helpful here.)
+# Since we're looking for (a,b,c) such that the following two things are true:
+# 	(1) a^2 + b^2 = c^2
+# 	(2) a + b + c = 1000
+# Defining (2) in terms of m and n, we get:
+# 	(2') m(m + n) = 500
+# From (2') we get these:
+# 	(3) 500 % m = 0
+# 	(4) 500 % (m + n) = 0
+# Factoring 500 gets you 5^3 + 2^2, so m's (and (m + n)'s) factors come from
+# there:
+# 	(5) m is in {2, 4, 5, 10, 20, 25, 50, 100, 125, 250}
+# 	(6) (m + n) is in {2, 4, 5, 10, 20, 25, 50, 100, 125, 250}
+# This is a pretty small search space already.  Since exactly one of (m,n) is
+# even and an even plus an odd is odd, (m + n) is odd:
+# 	(7) (m + n) is in {5, 25, 125}
+# This narrows things significantly, because m = 500 / (m + n):
+# 	(8) m is in {4, 20, 100}
+# Since n < m and odd, and by (7) and (8),
+# 	(9) n is in {1, 5, 25}
+# At this point, it's small enough to check manually:
+# 	4(4 + 1) = 20
+# 	20(20 + 5) = 500
+# 	100(100 + 25) = 12500
+# And that just leaves us with the one option:  (m,n) = (20,5)
+
+# Generates Pythagorean triples from arbitrary integer pairs, provided m>n and
+# exactly one of the pair is odd.
+: mn>abc ( m n -- a b c )
+	2dup swap 2 ^ swap 2 ^ - -rot ( a m n )
+	2dup 2 * * -rot ( a b m n )
+	swap 2 ^ swap 2 ^ + ( a b c ) ;
+: pprod ( m n -- a*b*c )   mn>abc * * ;
+
+20 5 pprod . cr
