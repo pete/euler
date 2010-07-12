@@ -16,5 +16,4 @@
 	0= if drop exit then
 	nip ;
 
-
 20 default-number tiniest-sigma . cr

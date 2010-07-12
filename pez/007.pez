@@ -32,8 +32,6 @@ variable pcount
 	nip
 ;
 
-: atoi strint ;
-
 : which-prime
 	argc
 	0= if 10001 exit then
