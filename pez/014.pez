@@ -1,0 +1,26 @@
+#! /usr/bin/env pez
+# f(n | n is even) = n/2
+# f(n | n is odd)  = 3n + 1
+# Which integer under 1,000,000 requires the largest number of applications of
+# f(n) to reach 1?
+
+htable constant cmap  1 1 cmap ht!
+htable constant rmap  1 1 rmap ht!
+
+: collatz ( n -- f[n] )   dup 1 and if 3 * 1+ else 2/ then ;
+: csteps ( n -- steps )
+	dup cmap ht@ dup 0<> if nip exit else drop then
+	>r r@ collatz csteps 1+
+	dup r> 2dup swap rmap ht! cmap ht! ;
+
+: find-max ( limit -- max )   0 swap 1 do i csteps max loop ;
+: max-steps ( limit -- max )   find-max rmap ht@ ;
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+1000000 default-number max-steps
+dup . cmap ht@ "(" print . "steps.)" puts
