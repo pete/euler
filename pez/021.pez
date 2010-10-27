@@ -1,0 +1,51 @@
+#! /usr/bin/env pez
+
+# Evaluate the sum of all the amicable numbers under 10000.
+
+# This was a first pass, and runs way faster than I expected it to for the
+# provided number (10,000), but doesn't get close to running in linear time.
+# Going to try one more tweak.
+
+"bench" load-lib
+
+variable sigma-n
+: sigma ( n|8<n -- sigma[n] )
+	dup sigma-n !
+	1 ( n sum )
+	swap float sqrt floor 2 do
+		sigma-n @ i /mod swap 0= if + i + else drop then
+	loop ;
+
+htable constant sigmas
+ 1 1 sigmas ht!
+ 3 2 sigmas ht!
+ 4 3 sigmas ht!
+ 7 4 sigmas ht!
+ 6 5 sigmas ht!
+12 6 sigmas ht!
+ 8 7 sigmas ht!
+15 8 sigmas ht!
+
+# Memoized version of the above.
+: m-sigma ( n -- sigma[n] )
+	dup sigmas ht@ dup if nip exit then drop
+	dup sigma dup rot sigmas ht! ;
+
+variable amicable-sum
+: sum-amicable ( limit -- )
+	0 amicable-sum !
+	1 do
+		i m-sigma dup ( sigma[i] sigma[i] )
+		i < if # i.e., we've calulated sigma[sigma[n]]
+			dup m-sigma i = if # They're amicable!
+				i + amicable-sum +!
+			else drop then
+		else drop then
+	loop ;
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+10000 default-number bench: sum-amicable amicable-sum @ . ;bench
