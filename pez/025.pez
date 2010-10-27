@@ -1,0 +1,39 @@
+#! /usr/bin/env pez
+# What is the first term in the Fibonacci sequence to contain 1000 digits?
+
+# I initially brute-forced it in Ruby, and the solution arrived in under half a
+# second, but Pez doesn't have built-in bignums, so it gets more interesting.
+
+# The number of digits in fib(n) is about log10(fib(n)).  fib(n) is close to
+# (phi*n)/sqrt(5).  
+
+5.0 sqrt 1.0 f+ 2.0 f/ fconstant phi
+10.0 log fconstant log[e]10
+: log10 ( f: n -- log10n )
+        log log[e]10 f/ ;
+
+: round ( f: n -- s: n )  0.5 f+ floor ;
+: fdigits-wrong ( n -- digits-in-fib[n] )
+	phi float f^ 5.0 sqrt f/ log10 round ;
+# But fdigits overflows the size of a 64-bit float before we hit the target
+# number, so we'll have to do a little more math.  (10.0 1000.0 f^ f. prints
+# "inf").
+# We have:
+# 	m = log10(((phi^n) - (-phi)^(-n))/sqrt(5.0)) ~=
+# 	    log10((phi^n)/sqrt(5.0)) =
+# 	    log10(phi^n) - log10(5)/2 =
+# 	    n * log10(phi) - log10(5)/2
+
+phi log10 fconstant log10phi
+5.0 log10 -0.5 f* fconstant log10root5
+
+: fdigits ( n -- d[n] )
+	float log10phi f* log10root5 f+ ;
+
+: find-1k-digits ( -- m )
+	1 begin
+		dup fdigits 999.0 f< 
+	while 1+ repeat ;
+
+"bench" load-lib
+bench: find-1k-digits . ;bench
