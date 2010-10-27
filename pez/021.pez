@@ -2,10 +2,6 @@
 
 # Evaluate the sum of all the amicable numbers under 10000.
 
-# This was a first pass, and runs way faster than I expected it to for the
-# provided number (10,000), but doesn't get close to running in linear time.
-# Going to try one more tweak.
-
 "bench" load-lib
 
 variable sigma-n
@@ -16,20 +12,32 @@ variable sigma-n
 		sigma-n @ i /mod swap 0= if + i + else drop then
 	loop ;
 
-htable constant sigmas
- 1 1 sigmas ht!
- 3 2 sigmas ht!
- 4 3 sigmas ht!
- 7 4 sigmas ht!
- 6 5 sigmas ht!
-12 6 sigmas ht!
- 8 7 sigmas ht!
-15 8 sigmas ht!
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+10000 default-number constant upper-limit
+upper-limit cells malloc constant sigmas
+
+: st@ ( n -- sigma[n]|0 )
+	cells sigmas + @ ;
+: st! ( sigma[n] n -- )
+	cells sigmas + ! ;
+
+ 1 1 st!
+ 3 2 st!
+ 4 3 st!
+ 7 4 st!
+ 6 5 st!
+12 6 st!
+ 8 7 st!
+15 8 st!
 
 # Memoized version of the above.
 : m-sigma ( n -- sigma[n] )
-	dup sigmas ht@ dup if nip exit then drop
-	dup sigma dup rot sigmas ht! ;
+	dup st@ dup if nip exit then drop
+	dup sigma dup rot st! ;
 
 variable amicable-sum
 : sum-amicable ( limit -- )
@@ -43,9 +51,4 @@ variable amicable-sum
 		else drop then
 	loop ;
 
-: default-number
-	argc 0= if exit then
-	argv @ atoi dup
-	0= if drop exit then
-	nip ;
-10000 default-number bench: sum-amicable amicable-sum @ . ;bench
+upper-limit bench: sum-amicable amicable-sum @ . ;bench
