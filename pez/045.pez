@@ -1,0 +1,73 @@
+#! /usr/bin/env pez
+
+# It can be verified that T[285] = P[165] = H[143] = 40755.
+# Find the next triangle number that is also pentagonal and hexagonal.
+
+# The general algorithm here is to check the next hexagonal number, then find a
+# pentagonal number that is equal to it.  If none is found, then repeat for
+# the next hexagonal number.  If one is found, look for the next triangle number
+# equal to the current hexagonal number.
+
+# I didn't put a lot of thought into this one, especially since the run-time for
+# finding the first answer (40755) was under a millisecond and the second was
+# still only 0.02s.  After looking at the forum posts for it, I'm slightly
+# disappointed that I didn't notice that all hexagonal numbers are also triangle
+# numbers, so checking triangle numbers is actually superfluous here.  But since
+# the totally unoptimized brute-force solution runs so quickly, there's not much
+# of a reason to tweak.
+
+"bench" load-lib
+
+variable recent-t
+variable tval
+1 recent-t !
+: t ( n -- t[n] )  dup 1+ * 2/ ;
+: next-t recent-t @ 1+ dup recent-t ! t dup tval ! ;
+
+variable recent-p
+variable pval
+1 recent-p !
+: p ( n -- p[n] ) dup 3 * 1- * 2/ ;
+: next-p recent-p @ 1+ dup recent-p ! p dup pval ! ;
+
+variable recent-h
+variable hval
+1 recent-h !
+: h ( n -- h[n] ) dup 2* 1- * ;
+: next-h recent-h @ 1+ dup recent-h ! h dup hval ! ;
+
+# Could use some cleanup, and only works for (nest) words:
+: tailrec ( -- )
+	# Push body of following word onto the stack
+        ' >body ['] (lit) , ,
+	# Push that onto the return stack.
+	['] >r ,
+	# And exit so the return stack pops right away.
+	['] exit , ; immediate
+
+: find-matching-t ( val -- val t )
+	next-t
+	2dup > if drop tailrec find-matching-t then ;
+
+: find-matching-p ( h -- h p )
+	next-p
+	2dup > if drop tailrec find-matching-p then ;
+
+: print-result ( )
+	recent-t @ "t[%ld] = " format print
+	recent-p @ "p[%ld] = " format print
+	recent-h @ "h[%ld] = " format print
+	hval @ . cr ;
+
+: brute-force ( -- )
+	next-h
+	find-matching-p
+	find-matching-t
+	over = -rot = and if exit then
+	tailrec brute-force ;
+
+: solve-next ( -- )
+	bench: brute-force print-result ;bench ;
+
+solve-next
+solve-next
