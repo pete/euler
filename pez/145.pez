@@ -1,0 +1,85 @@
+#! /usr/bin/env pez
+
+# Some positive integers n have the property that the sum [ n + reverse(n) ]
+# consists entirely of odd (decimal) digits. [...] We will call such numbers
+# reversible[. ...] How many reversible numbers are there below one-billion
+# (10^(9))?
+
+# This is a dirty solution, and it takes 83s to run (!!) but it at least doesn't
+# cast numbers to strings!
+
+"bench" load-lib
+
+: reverse-2 ( n -- reverse[n] )
+	10 /mod swap 10 * + ;
+: reverse-3
+	100 /mod swap
+	10 /mod swap
+	10 * +
+	10 * + ;
+
+: reverse-4
+	100 /mod
+	reverse-2
+	swap
+	reverse-2
+	100 * + ;
+
+: reverse-5 drop 0 ;
+
+: reverse-6
+	1000 /mod
+	reverse-3
+	swap
+	reverse-3
+	1000 * + ;
+
+: reverse-7
+	1000 /mod
+	10 /mod reverse-3
+	swap 1000 * +
+	swap reverse-3 10000 * + ;
+
+: reverse-8
+	10000 /mod reverse-4
+	swap reverse-4
+	10000 * + ;
+
+: rv+ ( reversers reverser -- ) over ! cell-size + ;
+7 cells malloc constant reversers
+
+reversers
+' reverse-2 rv+
+' reverse-3 rv+
+' reverse-4 rv+
+' reverse-5 rv+
+' reverse-6 rv+
+' reverse-7 rv+
+' reverse-8 rv+
+drop
+
+: reverse ( n -- reverse[n] )
+	dup float log10 floor 1- cells reversers + @ execute ;
+
+: reversible? ( n -- t|f )
+	dup 10 mod 0= if drop 0 exit then
+	dup reverse +
+	begin dup while dup 1 and 0= if drop 0 exit then 10 / repeat
+	drop -1 ;
+
+variable rcount 
+: rcl do ( i . cr ) i reversible? rcount +! loop ;
+: count-reversibles ( n -- count )
+	0 rcount !
+	10000 11 rcl	# 2-4 digits
+	# No 5s.
+	100000000 100001 rcl	# 6-8 digits
+	rcount @ negate ;
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+bench: count-reversibles . ;bench
