@@ -5,7 +5,7 @@ Here are the solutions, there aren't that many, and they're not that
 good.  Some of them benchmark themselves, and some would be happier if
 you typed 'time' before them.  Most of them are documented.  All of them
 run in reasonable amounts of time (under a few seconds on semi-modern
-hardware, usually under a second).  The files are all named
-consistently:  $language/$problem_number.$ext.  
+hardware, usually under a second) except my solution for #145.  The files are
+all named consistently:  $language/$problem_number.$ext.  
 
 Everything in this repo can be considered public domain.
