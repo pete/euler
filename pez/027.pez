@@ -1,0 +1,84 @@
+#! /usr/bin/env pez
+
+"bench" load-lib
+
+# n² + an + b, where |a| < 1000 and |b| < 1000
+# Find the product of the coefficients, a and b, for the quadratic expression
+# that produces the maximum number of primes for consecutive values of n,
+# starting with n = 0.
+
+# As before, I copied a sieve implementation from Pez's doc/examples.  I wonder
+# if that should go into the standard library.
+
+# Is 200k primes enough?  Gonna bet yes.  Note that we're not looking for a
+# string of 200k consecutive primes, but that some set of numbers coming out of
+# the function is prime.
+200000 1+ constant biggest
+biggest 2/ constant sieve-size
+sieve-size malloc constant sieve
+
+# A few words for address translation.  There's a minor optimization here:  we
+# skip all of the even numbers and special-case 2.  These words are for
+# translating back and forth between numbers and addresses in the sieve.
+: >sa ( n -- sieve-address )   2/ 1- sieve + ;
+: >n ( sieve-address -- n )   sieve - 1+ 2* 1+ ;
+
+# As mentioned above, we totally ignore even numbers, including these words, so
+# they rely on not being asked about even numbers.
+: prime? ( n -- t|f )   >sa c@ 0= ;
+: not-prime! ( n -- )   >sa -1 swap c! ;
+
+variable 2n
+: sieve-n ( n -- )
+	# From n*3 (the first odd composite that is a multiple of n) to biggest,
+	# stepping by n*2 (remember, we skip evens):
+	dup 1 shift 2n !
+	biggest swap 3 * do
+		i not-prime!
+	2n @ +loop ;
+
+: sieve-all ( -- )
+	biggest float sqrt ceil 3 do
+		i sieve-n
+	2 +loop ;
+
+# That's the end of the copypasta.
+
+# Of course, trivial:
+: quad ( b a n -- n^2+an+b )
+	>r r@ * + r@ r> * + ;
+
+variable ab
+variable longest-seq
+0 longest-seq !
+# This word checks to see if the sequence of primes produced by this a and b is
+# greater than the previous record-holder, and stores it if so.  Note that it's
+# a little ugly, as sometimes q[n]<0 or is even, which the prime? above doesn't
+# handle correctly, so we do that check here.
+: check-primes ( b a -- n )
+	0 >r begin
+		2dup r@ quad
+		dup 0>
+		over 1 and and
+		if prime? else drop 0 then
+	while r> 1+ >r repeat
+	r@ longest-seq @ > if r> longest-seq ! * ab ! else r> drop 2drop then ;
+
+# Now we get to the brute-force loop.  |a|<1000 and |b|<1000, so we just check
+# every combination of a, b in (-999..999).
+: check-ab ( -- )
+	1000 -999 do
+		1000 -999 do
+			i j check-primes
+		loop
+	loop ;
+
+bench:
+	# 1.3 seconds to do the sieve *and* brute-force a solution.  I'm
+	# beginning to think that Pez is holding me back from getting better at
+	# math, as a result of being this speedy.  Wonder how it'd be if I were
+	# solving these mainly in C.
+	sieve-all
+	check-ab
+	ab @ .
+;bench

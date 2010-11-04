@@ -1,0 +1,54 @@
+#! /usr/bin/env pez
+
+# How many composite integers, n < 10^8, have precisely two, not necessarily
+# distinct, prime factors?
+
+# Pretty basic.  Most of the time is spent running a sieve to get a list of
+# primes.  After that, for each prime, we multiply it by the primes larger than
+# it until one yields a product larger than the limit.
+
+# The prime number sieve was so useful that I pushed it into Pez's standard
+# library.
+
+"prime-sieve" load-lib
+"bench" load-lib
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+10 8 ^ default-number constant upper-limit
+upper-limit 2/ biggest!
+
+variable total 0 total !
+variable curprime 2 curprime !
+
+: count-multiples ( -- )
+	biggest >sa curprime @ >sa do
+		i c@ 0= if
+			i >n curprime @ * upper-limit
+			<= if
+				total 1+!
+			else leave then
+		then
+	loop ;
+
+variable next-time
+-1 next-time !
+: advance ( -- continue? )
+	next-time @ 0= if 0 exit then
+	begin 2 + dup dup * upper-limit < while
+		dup prime? if nextprime ! -1 exit then
+	repeat 0 next-time ! -1 ;
+
+: count-double-composites ( -- )
+	count-multiples
+	begin advance while count-multiples repeat ;
+
+bench:
+	sieve-all
+	count-double-composites
+	total @ "<%ld>" format print
+;bench

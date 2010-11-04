@@ -1,0 +1,52 @@
+#! /usr/bin/env pez
+
+# Find the sum of all numbers which are equal to the sum of the factorial of
+# their digits.
+
+"bench" load-lib
+
+10 cells malloc constant factorials
+: init-factorials ( -- )
+	1 factorials !
+	1 10 1 do i * dup i cells factorials + ! loop ;
+
+: dump-factorials ( -- )
+	0 10 cells factorials + factorials do
+		dup "%ld! = " format print i @ "%6ld" format print cr 1+
+	cell-size +loop ;
+
+: factorial ( n -- n! ) # 0-9 only!
+	cells factorials + @ ;
+
+variable fd-sum
+: sum-digits ( n -- sum )
+	0 fd-sum !
+	begin dup while
+		10 /mod swap factorial fd-sum +!
+	repeat drop fd-sum @ ;
+
+: curious? ( n -- t|f )   dup sum-digits = ;
+
+# From the problem, we have that the lower bound is 10, since you need at least
+# two digits to have a "sum", per the problem's definition.
+: naive-upper-bound ( -- n )
+	99 begin dup dup sum-digits <= while 10 * 9 + repeat ;
+# The run-time for this was ~8s on my machine.  pudquick on the forums had a
+# more clever way to calculate the upper bound:
+# 	Your upper bound should be based on the intersection of y=x and
+# 	y=9!*log(x).
+# This cuts the run-time down to ~2s.  (Of course, the program is even faster if
+# you precalculate the upper bound, but it's even faster if you specify an upper
+# bound of the second number to exhibit this property, since there are only two.
+# And that's no fun!)
+: upper-bound ( -- n )
+	9 factorial >r
+	10
+	begin r@ over float log10 floor * over >= while 1+ repeat r> drop ;
+
+variable c-sum
+: c<n ( bound -- sum )
+	0 c-sum !
+	10 do i curious? if i c-sum +! then loop c-sum @ ;
+
+bench: init-factorials upper-bound c<n . ;bench

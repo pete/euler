@@ -1,0 +1,93 @@
+#! /usr/bin/env pez
+
+# How many generalised Hamming numbers of type 100 are there which don't exceed
+# 10^9?
+
+"bench" load-lib
+
+# Once again, we break out the copypasta from problem #10.  We need a list of
+# primes, however we don't use them directly in finding the Hamming numbers of
+# type 100.  Rather, we need to get the primes from 100 to 10^4.5, so that we
+# can build *another* sieve and filter out numbers that have prime factors
+# greater than 100.
+
+# This program does #204 by default, but can take arguments:
+# 	pez/204.pez [power-of-10 [hamming-type]]
+# So, if you pass no arguments, it's equivalent to running it with the
+# arguments "9 100".
+
+: default-number ( n i -- n|arg[i] )
+	dup argc 1- > if drop exit then
+	cells argv + @ atoi dup
+	0= if drop exit then
+	nip ;
+
+10 9 0 default-number ^ constant hamming-max
+hamming-max constant biggest
+100 1 default-number constant hamming-type
+
+biggest 2/ constant sieve-size
+sieve-size malloc constant sieve
+
+# A few words for address translation.  There's a minor optimization here:  we
+# skip all of the even numbers and special-case 2.  These words are for
+# translating back and forth between numbers and addresses in the sieve.
+: >sa ( n -- sieve-address )   2/ 1- sieve + ;
+: >n ( sieve-address -- n )   sieve - 1+ 2* 1+ ;
+
+# As mentioned above, we totally ignore even numbers, including these words, so
+# they rely on not being asked about even numbers.
+: prime? ( n -- t|f )   >sa c@ 0= ;
+: not-prime! ( n -- )   >sa -1 swap c! ;
+
+variable 2n
+: sieve-n ( n -- )
+	# From n*3 (the first odd composite that is a multiple of n) to biggest,
+	# stepping by n*2 (remember, we skip evens):
+	dup 1 shift 2n !
+	biggest swap 3 * do
+		i not-prime!
+	2n @ +loop ;
+
+: sieve-all-primes ( -- )
+	biggest float sqrt ceil 3 do
+		i sieve-n
+	2 +loop ;
+
+hamming-max hamming-type - constant hsieve-size
+hsieve-size malloc constant hsieve
+
+: >hsa ( n -- hseive-addr ) hamming-type - hsieve + 1- ;
+: hsa>n ( hsieve-addr -- n )  1+ hsieve - hamming-type + ;
+
+variable h#
+
+: hamming-filter ( prime-number -- )
+	# Last address in the sieve:
+	hsieve hsieve-size + 1-
+	# The first multiple of the prime that is greater than the prime, as an
+	# address:
+	over 
+	>hsa
+	do
+		-1 i c!
+	dup +loop drop ;
+
+: sieve-hammings ( -- )
+	hamming-max >sa hamming-type 1+ >sa do
+		i c@ 0= if i >n hamming-filter then
+	loop ;
+
+: count-hammings ( -- )
+	hamming-type h# ! ( Because 1..T do not have prime factors > T. )
+	hsieve hsieve-size + hsieve do
+		i c@ 0= if  ( i hsa>n . cr ( ) h# 1+! then
+	loop h# @ ;
+
+: count-hammings ( -- )
+	hamming-type negate
+	hsieve hsieve-size + hsieve do
+		i c@ 0= +
+	loop negate ;
+
+bench: sieve-all-primes sieve-hammings count-hammings . ;bench
