@@ -1,0 +1,16 @@
+#! /usr/bin/env pez
+
+# Starting in the top left corner of a 2x2 grid, there are 6 routes (without
+# backtracking) to the bottom right corner.
+# How many routes are there through a 20x20 grid?
+
+# I did the Ruby solution first, upon realizing that 40! overflows 64-bit
+# integers, and Pez doesn't (yet) support double-width math.  A 64-bit float,
+# though, has enough precision for this; factorials have lots of zeros at the
+# end of them in any base.
+
+: fact ( n -- f:n! )  dup float 1 ?do i float f* loop ;
+
+: c2n,n ( n -- 2n-choose-n )
+	dup 2* fact fact fdup f* f/ fix ;
+20 c2n,n . cr
