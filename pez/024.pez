@@ -1,0 +1,39 @@
+#! /usr/bin/env pez
+
+# What is the 1,000,000th lexicographic permutation of 0123456789?
+
+"bench" load-lib
+
+# This is done in a fashion as barbaric as possible.  It uses a deep stack,
+# mixes calculations with I/O, dances around array boundaries, and disregards
+# mathematics.  It does, in fact, violate both Forth rules of style and general
+# coding rules of style.
+#
+# ...But it's correct, fast, and short.
+
+: default-number ( n -- n|argv[0] )
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+"0123456789" constant s
+: .shift-s ( n -- )
+	s + dup c@ putc
+	9 s + swap ?do i 1+ c@ i c! loop ;
+: factorial-fill ( -- 0! ... 9! ) 1 1 10 2 do dup i * loop ;
+: permutation# ( n -- )
+	>r
+	factorial-fill
+	r>
+	10 0 do swap /mod .shift-s loop drop ;
+
+" " c@ 
+10 6 ^ default-number
+1- # I did this problem by hand, only to find out that I had the wrong answer,
+   # because my calculations start with the original, untouched order as
+   # permutation the zeroth, not the first.  I did not want to do this problem
+   # by hand for *two* numbers, so I dashed out this program and made sure to
+   # remember that the 1,000,000th permutation is permutation #999,999.
+   # Good night, everybody.
+bench: permutation# putc ;bench
