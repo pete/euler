@@ -1,0 +1,37 @@
+#! /usr/bin/env ruby
+# hahaha, this program sucks
+
+def colored(s)
+	if $stdout.tty?
+		"\e[0;36;49m#{s}\e[0m"
+	else
+		s
+	end
+end
+
+langs = Hash.new { |h,k| h[k] = [] }
+
+Dir['*/*.*'].each { |sol|
+	next unless /^([a-z0-9]+)\/p?([0-9]+)\.[a-z0-9]+$/.match(sol)
+	langs[$1] << $2
+	(langs['all'] << $2).uniq!
+}
+
+langs.delete 'data'
+langs.delete 'tmp'
+sols = Hash.new { |h,k| h[k] = [] }
+langs.each { |l,ss| ss.each { |s| sols[s] << l } unless l == 'all' }
+
+langs = langs.to_a.map { |l,ss|
+	ss.sort!.map! { |o|
+		s = o.to_i.to_s
+		# s = colored(s) if(sols[o].length == 1 && l != 'all')
+		s = colored(s) if sols[o].length == 1
+		s
+	}
+	[ss.size, "#{l}(#{ss.length.to_s})", ss.join(',')]
+}
+maxlen = langs.map { |c,l,*| l.length }.max
+langs.sort_by { |c,l,ss| -c }.each { |c,l,ss|
+	printf("%#{maxlen}s:  #{ss}\n", l)
+}
