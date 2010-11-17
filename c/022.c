@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*
    Working out the alphabetical value for each name, multiply this value by its
@@ -829,7 +830,7 @@ int strsort(const void *va, const void *vb)
 	return strcmp(a, b);
 }
 
-int main(int argc, char **argv[])
+int main(int argc, char *argv[])
 {
 	long total = 0;
 	int name_total, i, j, name_count = 0;
@@ -850,4 +851,5 @@ int main(int argc, char **argv[])
 	}
 
 	printf("%ld\n", total);
+	return 0;
 }
