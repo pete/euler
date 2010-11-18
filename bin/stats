@@ -5,7 +5,7 @@ def colored(s)
 	if $stdout.tty?
 		"\e[0;36;49m#{s}\e[0m"
 	else
-		s
+		"[#{s}]"
 	end
 end
 
