@@ -1,13 +1,18 @@
 #! /usr/bin/env pez
 # How many different ways can £2 be made using any number of coins?
 
+# There are three solutions here, all with the same algorithm.  I was having
+# fun with Pez syntax for the most part.
+
 "bench" load-lib
 
 # This solution is probably not how one might normally do this in Pez.  It's
 # designed to mirror retiman's solution, as I wanted to show him how this
 # pattern is done in Pez.
 
-: p: ( p[n-1] n ) 
+: p1 ( n -- p1[n] ) drop 1 ;
+
+: p: ( p[n-1] n -- ) 
 	create , ,  # This stores n and p[n-1] on the heap.
 	does> ( n addr )
 	>r 0 
@@ -16,21 +21,23 @@
 		swap r@ @ - swap ( n-i sum )
 	repeat nip r> drop ;
 
-: p1 ( n -- p1[n] ) drop 1 ;
-'   p1   2 p: p2
-'   p2   5 p: p5
+# '   p1   2 p: p2
+: p2 ( n -- m )  2 + 2/ ;
+# '   p2   5 p: p5
+: p5 ( n -- m ) 4 + dup * float 20.0 f/ 0.5 f+ floor ;
 '   p5  10 p: p10
 '  p10  20 p: p20
 '  p20  50 p: p50
 '  p50 100 p: p100
 ' p100 200 p: p200
 
+bench: 200 p200 . ;bench
+
 # Of course, adding two string evals to p: could make the syntax for using it
 # even simpler, but...two string evals, man.  Ugh.
 
-bench: 200 p200 . ;bench
-
-# This solution is interesting but about half as fast:
+# This solution is interesting but took about 80% longer than the first one
+# before p5 was short-cut:
 
 # First we build a table to tell what the possible x's are for p[x]:
 200 malloc constant l
@@ -42,9 +49,6 @@ bench: 200 p200 . ;bench
 : p ( n x -- p[x][n] )
 	over 0 < if 2drop 0 exit then # There are zero ways to make a negative.
 	dup 1 = if 2drop 1 exit then # p[1][n] = 1
+	2dup x' p >r tuck - swap p r> + ;
 
-	2dup x' ( n x n x' )
-	dup if p else nip then ( n x p[x'][n]|0 )
-	>r tuck - swap p r> + ;
-
-bench: 200 200 p . ;bench .s
+bench: 200 200 p . ;bench
