@@ -24,14 +24,14 @@
 # '   p1   2 p: p2
 : p2 ( n -- m )  2 + 2/ ;
 # '   p2   5 p: p5
-: p5 ( n -- m ) 4 + dup * float 20.0 f/ 0.5 f+ floor ;
+: p5 ( n -- m ) 4 + dup * 10 + 20 / ;
 '   p5  10 p: p10
 '  p10  20 p: p20
 '  p20  50 p: p50
 '  p50 100 p: p100
 ' p100 200 p: p200
 
-bench: 200 p200 . ;bench
+bench: 200 p200 . ;bench # (0.000086 seconds.)
 
 # Of course, adding two string evals to p: could make the syntax for using it
 # even simpler, but...two string evals, man.  Ugh.
@@ -51,4 +51,5 @@ bench: 200 p200 . ;bench
 	dup 1 = if 2drop 1 exit then # p[1][n] = 1
 	2dup x' p >r tuck - swap p r> + ;
 
-bench: 200 200 p . ;bench
+bench: 200 200 p . ;bench # (0.020222 seconds.)
+

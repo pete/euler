@@ -23,21 +23,22 @@ variable sum
 # Since only every third Fibonacci number is even, we only need to find 1/3 of
 # the numbers from the beginning to the limit.
 : sum-even-fibs-faster ( limit -- sum )
+	>r
 	2 sum !
-	2 8 ( lim a b )
+	2 8 ( a b )
 	begin
-		dup 3 pick <=
+		dup r@ <=
 	while
 		dup sum +!
 		swap over ( b a b )
 		4 * + ( b a+4b )
-	repeat drop 2drop sum @ ;
+	repeat 2drop r> drop sum @ ;
 
 : which-limit 
 	argc 0= if 4000000 exit then
-	argv @ strint dup
+	argv @ atoi dup
 	0= if drop 4000000 exit then
 	nip ;
 
-which-limit sum-even-fibs        . cr
+# which-limit sum-even-fibs        . cr
 which-limit sum-even-fibs-faster . cr

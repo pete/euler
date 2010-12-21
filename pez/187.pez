@@ -23,28 +23,29 @@
 upper-limit 2/ biggest!
 
 variable total 0 total !
-variable curprime 2 curprime !
+variable curprime
+
+: count-2multiples ( -- )
+	total 1+! # 2^2
+	1 begin next-prime dup biggest < while total 1+! repeat drop ;
 
 : count-multiples ( -- )
-	biggest >sa curprime @ >sa do
-		i c@ 0= if
-			i >n curprime @ * upper-limit
-			<= if
-				total 1+!
-			else leave then
-		then
-	loop ;
+	curprime @ dup
+	begin dup while
+		2dup * upper-limit <= if total 1+! else 2drop exit then
+		next-prime
+	repeat 2drop ;
 
 variable next-time
 -1 next-time !
 : advance ( -- continue? )
 	next-time @ 0= if 0 exit then
-	begin 2 + dup dup * upper-limit < while
-		dup prime? if nextprime ! -1 exit then
-	repeat 0 next-time ! -1 ;
+	curprime @ next-prime
+	dup dup * upper-limit <= if curprime ! -1 else drop 0 then ;
 
 : count-double-composites ( -- )
-	count-multiples
+	count-2multiples
+	3 curprime ! count-multiples
 	begin advance while count-multiples repeat ;
 
 bench:

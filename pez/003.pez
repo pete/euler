@@ -4,7 +4,7 @@
 # running this on an x86-64 machine, so the stack is 64 bits wide.
 
 # Factors m out of n, leaves both.
-: factor-out ( n m -- p m )
+: factor-out ( n f -- n' f )
 	begin
 		2dup mod 0=
 	while
@@ -15,14 +15,14 @@
 	2 factor-out drop
 	1
 	begin
-		2+ 2dup >
+		over 1 <>
 	while
-		factor-out
-	repeat max ;
+		2+ factor-out
+	repeat nip ;
 
 : which-number
 	argc 0= if 600851475143 exit then
-	argv @ strint dup
+	argv @ atoi dup
 	0= if drop 600851475143 exit then
 	nip ;
 
