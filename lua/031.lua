@@ -1,3 +1,4 @@
+#! /usr/bin/env lua
 -- How many different ways can £2 be made using any number of coins?
 
 xs = {

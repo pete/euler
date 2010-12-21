@@ -1,3 +1,4 @@
+#! /usr/bin/env lua
 function ef(n)
 	if n == 0 then
 		return 2

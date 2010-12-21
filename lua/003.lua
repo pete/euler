@@ -1,3 +1,4 @@
+#! /usr/bin/env lua
 -- Find the largest prime factor of 600851475143.
 
 function factor_out(n, f)
