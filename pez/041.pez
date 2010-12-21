@@ -1,0 +1,42 @@
+#! /usr/bin/env pez
+
+# What is the largest n-digit pandigital prime that exists?
+
+# It's brute-force, but it's under a second.  
+
+"bench" load-lib
+"prime-sieve" load-lib
+
+# Eight- and nine-digit pandigital numbers are always divisible by 3.
+7654321 biggest!
+
+: cell-zero ( addr sz -- )
+	cells over + swap do 0 i !  cell-size +loop ;
+
+: #digits ( n -- m )  float log10 floor 1+ ;
+	
+10 cells malloc constant pd
+: clear-pd ( -- )   pd 10 cell-zero ;
+: populate-pd ( n -- )
+	begin dup while
+		10 /mod swap cells pd + 1 swap !
+	repeat drop ;
+
+variable p?'
+: pandigital? ( n -- t|f )
+	clear-pd
+	dup populate-pd
+
+	pd @ if drop 0 exit then
+
+	1 p?' !
+	#digits 1+ cells pd + pd cell-size + do
+		i @ 1 = p?' @ and p?' !
+	cell-size +loop p?' @ ;
+
+: psearch ( limit -- n )
+	begin prev-prime dup 0> while
+		dup pandigital? if exit then
+	repeat 0 ;
+
+bench: sieve-all biggest psearch . ;bench

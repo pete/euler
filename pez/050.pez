@@ -1,0 +1,62 @@
+#! /usr/bin/env pez
+
+# Which prime, below one-million, can be written as the sum of the most
+# consecutive primes?
+
+"bench" "prime-sieve" ' load-lib depth 1- times
+
+# Faster than I thought it'd be, since it uses a rough algorithm, but with an
+# almost-clever way to determine the upper bound, so that we don't check more
+# than we have to.  About 0.16s.
+
+# The prime sieve library lies about even numbers being prime, and just treats
+# them like second-class numbers overall (for the purposes of speed).  We don't
+# want prime? to lie about even numbers, and we need the prime immediately
+# following 2 to be 3, so we augment them here:
+' prime?
+: prime? ( n -- t|f )  dup 1 and swap [ , ] and ;
+' next-prime
+: next-prime  dup 2 = if drop 3 exit then [ , ] ;
+
+# For holding the champion:
+variable lp 953 lp !
+variable tc 21 tc !
+# The initial values were given as part of the problem, so we use them as a
+# starting point.  Using 2 and 1 works about as well, since we pass the first
+# 21-term prime while still adding from 2.
+
+# A prime that is at least as large as the biggest prime that could beat the
+# current record-holder.  N consecutive primes starting at a prime larger than
+# this would be over the max.
+: to-beat ( -- n )   biggest tc @ / prev-prime ;
+
+# This was for debugging.  It's useful for seeing how the program works by
+# stuffing a call to it somewhere in sum-under-1m.
+: dump-'em ( -- ) 
+	lp @ "Prime so far:  %d\t" format
+	tc @ "Terms:  %d\t" format s+
+	to-beat "To beat:  %d\t" format s+ print .s ;
+
+variable clp
+variable ctc
+: sum-under-1m ( p -- )
+	1 ctc !
+	dup clp !
+	begin next-prime dup 0> while
+		ctc 1+!
+		dup clp @ + dup clp !
+		dup biggest > if 2drop exit then
+		prime? if ctc @ tc @ > if clp @ lp ! ctc @ tc ! then then
+	repeat ;
+
+: find-a-prime ( -- p )
+	2
+	begin dup to-beat <= while
+		dup sum-under-1m next-prime
+		dup 0< if drop exit then
+	repeat lp @ ;
+
+bench:
+	10 6 ^ biggest! sieve-all
+	find-a-prime . tc @ "(%d terms) " format print
+;bench

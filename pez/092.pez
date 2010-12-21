@@ -1,0 +1,38 @@
+#! /usr/bin/env pez
+
+# How many starting numbers below ten million will arrive at 89?
+
+"bench" load-lib
+
+# Just under 9 seconds.  Shameful.
+
+: default-number
+	argc 0= if exit then
+	argv @ atoi dup
+	0= if drop exit then
+	nip ;
+
+htable constant summemo
+: smlook ( n -- sum )   summemo ht@ ;
+: smmemo ( n sum -- )   swap summemo ht! ;
+: sum-digits'-squares ( n -- sum )
+	dup 0= if exit then
+	dup smlook dup if nip exit then drop
+	dup 10 /mod sum-digits'-squares swap dup * + tuck smmemo ;
+
+10 7 ^ default-number constant n
+n 1+ malloc constant ending
+: lookup ( n -- 0,1,89 )   ending + c@ ;
+: remember ( n 1|89 -- )   swap ending + c! ;
+1 1 remember
+89 89 remember
+
+: find-ending ( n -- 1|89 )
+	dup lookup dup if nip exit then drop
+	dup sum-digits'-squares find-ending >r r@ remember r> ;
+
+variable 89s
+: count-89s ( n -- count )
+	2 do i find-ending 89 = if 89s 1+! then loop 89s @ ;
+
+bench: n count-89s . ;bench

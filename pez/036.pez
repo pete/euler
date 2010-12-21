@@ -1,0 +1,66 @@
+#! /usr/bin/env pez
+
+# Find the sum of all numbers, less than one million, which are palindromic in
+# base 10 and base 2.
+
+"bench" load-lib
+
+# 0.004369s.  It's easier to generate binary palindromes, then check if they're
+# decimal palindromes.  binp-odd is a little uglier than I had hoped (two
+# superfluous shifts), but the answer came out correct and took under 5ms, so
+# I'm done with this program.
+
+# After checking the PE forums for this, it would appear that my solution is
+# somewhat unusual.  Most people just did string manipulations for both, so I
+# was on page 3 before I could find one that generated the binary palindromes.
+
+: reverse-string ( str -- reversed )
+	dup strlen 
+	dup malloc ( str1 len str2 )
+	over +
+	swap 0 do
+		1- 2dup swap
+		c@ swap c!
+		swap 1+ swap
+	loop nip ;
+
+: palindrome? ( n -- t|f )    "%ld" format dup reverse-string strcmp 0= ;
+
+: #bits ( n -- bc )
+	dup 2 <= if exit then
+	-1 shift #bits 1+ ;
+
+# Adds a number's binary reversal to itself, yielding a number with an even
+# number of bits.  (e.g., 5 (0b101) -> 45 (0b101101))
+: binp-even ( n -- n' )
+	dup #bits 0 do
+		1 shift
+		dup 1 i 2* 1+ shift and 0<> negate or
+	loop ;
+
+# Adds a number's binary reversal to itself (except the last bit), yielding a
+# number with an odd number of bits.  (e.g., 5 (0b101) -> 21 (0b10101))
+: binp-odd ( n -- n' )
+	dup #bits 0 do
+		dup ( n n )
+		1 i 2* 1+ shift and 0<> negate ( n n bit-set? )
+		swap 1 shift or
+	loop -1 shift ;
+
+variable sum
+# Adds a number if it is a decimal palindrome.
+: palin-add ( n -- )
+	dup palindrome? if ( dup . cr ) sum +! else drop then ;
+
+# This loops through the integers, starting at 1, and generates all binary
+# palindromes under a million, then checks for decimal palindromes.
+: sum-2/10-palindromes ( -- sum )
+	# Largest binary palindrome under 1,000,000 (0xf4240) is 999,471
+	# (0xf402f), the first (binary) half of which is 976 (0x3d0).
+	0 sum !
+	0x3d1 1 do
+		i binp-odd palin-add
+		i binp-even palin-add
+	loop sum @ ;
+
+bench: sum-2/10-palindromes . ;bench
