@@ -15,4 +15,4 @@ stats:
 	bin/stats
 
 clean:
-	rm -f c/bin/* erlang/*.beam
+	rm -f c/bin/* tmp/*.beam

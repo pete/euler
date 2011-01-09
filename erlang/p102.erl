@@ -4,7 +4,7 @@
 %-export([main/1]).
 -compile(export_all).
 
-fname() -> "data/102.txt".
+fname() -> "../data/102.txt". % The erlang stuff runs from tmp/
 
 collector(Pid) -> collector(Pid, 0).
 collector(Pid, N) ->
