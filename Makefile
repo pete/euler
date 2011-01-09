@@ -7,10 +7,12 @@ c%: c/bin/%
 	time $<
 
 e%: erlang/p%.erl
-	time escript $<
+	mkdir -p tmp
+	sh -c 'cd tmp; erlc ../$<; echo ""; \
+	time erl -noshell -shutdown_time 1 -s `basename $< .erl` main "" -s init stop'
 
 stats:
 	bin/stats
 
 clean:
-	rm -f c/bin/*
+	rm -f c/bin/* erlang/*.beam
