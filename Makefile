@@ -6,6 +6,12 @@ c/bin/%: c/%.c
 c%: c/bin/%
 	time $<
 
+pure/bin/%: pure/%.pure
+	pure -c $< -o $@
+
+p%: pure/bin/%
+	time $<
+
 e%: erlang/p%.erl
 	mkdir -p tmp
 	sh -c 'cd tmp; erlc ../$<; echo ""; \
