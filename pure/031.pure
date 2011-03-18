@@ -1,0 +1,29 @@
+#! /usr/bin/env pure
+
+// How many different ways can £2 be made using any number of coins?
+/*
+   0.011s, which is pretty speedy compared to most of the other solutions; it's
+   up there with Pez and Lua, but way behind C.  Downside:  3.5s to compile.
+   Interpreted, it runs in about 1.1 seconds, slightly faster than interpreted
+   Erlang.  Overall, Pure is pretty nice.
+*/
+using system;
+
+pn 200 = 100;
+pn 100 = 50;
+pn 50 = 20;
+pn 20 = 10;
+pn 10 = 5;
+pn 5 = 2;
+pn 2 = 1;
+
+p 1 _ = 1;
+// With this line:  0.011s.  Without: 0.064s.
+p 5 n = int $ round $ ((n + 4) ^ 2) / 20;
+p _ 0 = 1;
+p x n
+	= ((p (pn x) n) + (p x (n - x))) if n > 0;
+	= 0 otherwise;
+
+main = printf "%d\n" (p 200 200);
+if compiling then () else main;
