@@ -32,6 +32,15 @@ langs = langs.to_a.map { |l,ss|
 	[ss.size, "#{l}(#{ss.length.to_s})", ss.join(',')]
 }
 maxlen = langs.map { |c,l,*| l.length }.max
+puts "By language:"
 langs.sort_by { |c,l,ss| -c }.each { |c,l,ss|
 	printf("%#{maxlen}s:  #{ss}\n", l)
 }
+puts ''
+
+if ARGV.include? '-p'
+	puts "By problem:"
+	sols.to_a.sort!.each { |n,langs|
+		printf "%4d: %s\n", n.to_i(10), langs.sort.uniq.join(',')
+	}
+end
