@@ -81,10 +81,10 @@ inline double ftime()
 	return d;
 }
 
-void print_result(double t, long r)
+void print_result(double t, long r, char *name)
 {
 	t = ftime() - t;
-	printf("%ld (%0.05f seconds)\n", r, t);
+	printf("%ld (%0.05fs for %s version)\n", r, t, name);
 }
 
 int main(int argc, char *argv[])
@@ -104,15 +104,15 @@ int main(int argc, char *argv[])
 
 	t = ftime();
 	r = p(200, 200);
-	print_result(t, r);
+	print_result(t, r, "memoizing");
 
 	t = ftime();
 	r = p_prime(200, 200);
-	print_result(t, r);
+	print_result(t, r, "switch/case");
 
 	t = ftime();
 	r = p200(200);
-	print_result(t, r);
+	print_result(t, r, "macro");
 
 	return 0;
 }
