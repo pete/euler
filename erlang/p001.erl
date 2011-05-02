@@ -12,4 +12,5 @@ sum(N, Limit) -> N * triangle((Limit - 1) div N).
 
 main(_) ->
 	io:write(sum(3, 1000) + sum(5, 1000) - sum(15, 1000)),
-	io:fwrite("\n").
+	io:fwrite("\n"),
+	init:stop().
