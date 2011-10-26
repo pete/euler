@@ -28,6 +28,17 @@ e%: erlang/p%.erl
 	sh -c 'cd tmp; erlc ../$<; echo ""; \
 	time erl -noshell -shutdown_time 1 -s `basename $< .erl` main "" -s init stop'
 
+# Limbo
+INFERNO_ROOT = $(HOME)/proj/inferno-os
+INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)
+#LIMBO_FLAGS += -w -g
+i%: $(INFERNO_HOME)/i%.dis
+	time emu -r $(INFERNO_ROOT) /usr/$(USER)/$@
+
+$(INFERNO_HOME)/i%.dis: limbo/l%.b
+	limbo -o $@ $<
+
+
 # Pure
 p%: pure/bin/%
 	time $<
