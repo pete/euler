@@ -12,6 +12,9 @@ clean:
 a%: awk/%.awk
 	time awk -f $<
 
+a099: awk/099.awk
+	time awk -F, -f awk/099.awk data/099.txt
+
 a102: awk/102.awk
 	time awk -F, -f awk/102.awk data/102.txt
 

@@ -4,6 +4,8 @@
 # Which integer under 1,000,000 requires the largest number of applications of
 # f(n) to reach 1?
 
+# 2.042s.  Not too shabby, considering that it's a naive implementation.
+
 htable constant cmap  1 1 cmap ht!
 htable constant rmap  1 1 rmap ht!
 
