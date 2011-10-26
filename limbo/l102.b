@@ -4,8 +4,12 @@
 # and I've ported it to Limbo to teach myself some scanf, concurrency, and I/O.
 
 # Runs on a Thinkpad T60 (32-bit, dual 1.83GHz) in 0.06s.  By way of comparison,
-# the Erlang version (of which this program is a rough transliteration) on the
-# same machine runs in 0.24s.
+# on the same machine, the Erlang version (of which this program is a rough
+# transliteration) runs in 0.24s, and the awk solution runs in 0.02s.
+
+# I should note here that, had I screwed my head on straight when writing this,
+# I would have used ADTs (Limbo's "structs" that more resemble objects) or at
+# least tuples instead of passing everything as a ball of ints.
 
 implement L102;
 
