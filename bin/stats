@@ -12,6 +12,7 @@ end
 langs = Hash.new { |h,k| h[k] = [] }
 
 Dir['*/*.*'].each { |sol|
+	next if /^tmp\//.match sol
 	next unless /^([a-z0-9]+)\/[pl]?([0-9]+)\.[a-z0-9]+$/.match(sol)
 	langs[$1] << $2
 	(langs['all'] << $2).uniq!
