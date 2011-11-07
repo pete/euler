@@ -33,4 +33,3 @@ BEGIN {
 END {
 	print lmax, max
 }
-
