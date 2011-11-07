@@ -6,7 +6,7 @@ stats:
 	bin/stats
 
 clean:
-	rm -f c/bin/* tmp/*.beam
+	rm -f pure/bin/* c/bin/* tmp/*.beam
 
 # awk
 a%: awk/%.awk
@@ -34,9 +34,12 @@ e%: erlang/p%.erl
 # Limbo
 INFERNO_ROOT = $(HOME)/proj/inferno-os
 INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)
-#LIMBO_FLAGS += -w -g
+LIMBO_FLAGS += -w
+#LIMBO_FLAGS += -g
+EMU_FLAGS += -c1
+EMU_FLAGS += -r $(INFERNO_ROOT)
 i%: $(INFERNO_HOME)/i%.dis
-	time emu -r $(INFERNO_ROOT) /usr/$(USER)/$@
+	time emu $(EMU_FLAGS) /usr/$(USER)/$@
 
 $(INFERNO_HOME)/i%.dis: limbo/l%.b
 	limbo -o $@ $<
@@ -47,7 +50,7 @@ p%: pure/bin/%
 	time $<
 
 pure/bin/%: pure/%.pure
-	pure -c $< -o $@
+	pure -g -c $< -o $@
 
 # Racket
 r%: racket/bin/%
