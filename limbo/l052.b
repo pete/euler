@@ -1,6 +1,15 @@
 # Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x,
 # contain the same digits.
 
+# 0.07s.  The approach taken is slightly naive:  we check each number in
+# sequence.  There's a minor optimization that we make sure n and 6n have the
+# same number of digits by checking log[10](n) and log[10](6n).  Overall,
+# nothing fascinating here.
+
+# From the forum, it looks like most of the commenters had either remembered
+# this number, or had narrowed the search to ranges starting at 10^n to
+# 10^(n+1)/6, which is more clever.
+
 implement L052;
 
 include "sys.m"; sys: Sys; stderr: ref sys->FD;
@@ -62,7 +71,7 @@ init(ctxt: ref Draw->Context, argv: list of string)
 	for(i := 1; i < 16r7fffffff; i++) {
 		if(check_n(i)) {
 			sys->print("%d\n", i);
-			#exit;
+			exit;
 		}
 	}
 }
