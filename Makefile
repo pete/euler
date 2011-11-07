@@ -34,15 +34,15 @@ e%: erlang/p%.erl
 # Limbo
 INFERNO_ROOT = $(HOME)/proj/inferno-os
 INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)
-LIMBO_FLAGS += -w
-#LIMBO_FLAGS += -g
 EMU_FLAGS += -c1
 EMU_FLAGS += -r $(INFERNO_ROOT)
 i%: $(INFERNO_HOME)/i%.dis
 	time emu $(EMU_FLAGS) /usr/$(USER)/$@
 
+LIMBO_FLAGS += -w
+LIMBO_FLAGS += -g
 $(INFERNO_HOME)/i%.dis: limbo/l%.b
-	limbo -o $@ $<
+	limbo $(LIMBO_FLAGS) -o $@ $<
 
 
 # Pure
