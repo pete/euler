@@ -109,7 +109,6 @@ reader(out: chan of (int, string), fname: string)
 	file: ref Iobuf;
 
 	file = bufio->open(fname, bufio->OREAD);
-	
 
 	if(file == nil) {
 		out <-= (0, nil);
