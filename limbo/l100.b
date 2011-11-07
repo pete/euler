@@ -8,6 +8,8 @@
 # equation for generating numbers in the series is right there, though,
 # so...easy.  Kind of disappointing when a search engine has the answer, but
 # there are always more problems.
+
+# Anyway, under 0.01s for this version.
 implement L100;
 
 include "sys.m"; sys: Sys; stderr: ref sys->FD;
