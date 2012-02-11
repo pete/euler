@@ -1,12 +1,10 @@
 # Find the sum of all multiples of 3 or 5 below 1000.
 implement L001;
 
-include "sys.m";
-sys: Sys;
+include "sys.m"; sys: Sys;
 include "draw.m";
 
-L001: module
-{
+L001: module {
 	init:	fn(ctxt: ref Draw->Context, argv: list of string);
 };
 
