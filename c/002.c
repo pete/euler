@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// F(n) = 4 * F(n - 3) + F(n - 6)
 long sum_even_fibs(long limit)
 {
 	long sum = 2, a = 2, b = 8, tmp;
