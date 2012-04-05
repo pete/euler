@@ -32,18 +32,24 @@ e%: erlang/p%.erl
 	time erl -noshell -shutdown_time 1 -s `basename $< .erl` main "" -s init stop'
 
 # Limbo
-INFERNO_ROOT = $(HOME)/proj/inferno-os
-INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)
+INFERNO_ROOT = $(HOME)/inferno
+INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)/euler
 EMU_FLAGS += -c1
 EMU_FLAGS += -r $(INFERNO_ROOT)
-i%: $(INFERNO_HOME)/i%.dis
-	time emu $(EMU_FLAGS) /usr/$(USER)/$@
+l%: $(INFERNO_HOME)/l%.dis
+	time emu $(EMU_FLAGS) /usr/$(USER)/euler/$@
 
 LIMBO_FLAGS += -w
 LIMBO_FLAGS += -g
-$(INFERNO_HOME)/i%.dis: limbo/l%.b
+$(INFERNO_HOME)/l%.dis: limbo/l%.b
+	mkdir -p $(INFERNO_HOME)
 	limbo $(LIMBO_FLAGS) -o $@ $<
 
+# The Inferno sh(1)
+i%: infernosh/%.sh
+	mkdir -p $(INFERNO_HOME)
+	cp $< $(INFERNO_HOME)/$@.sh
+	time emu sh /usr/$(USER)/euler/$@.sh
 
 # Pure
 p%: pure/bin/%
