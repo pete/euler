@@ -8,10 +8,10 @@ run in reasonable amounts of time (under a few seconds on semi-modern
 hardware, usually under a second) except my Pez solutions for #145 and
 #204, both of which (shamefully) take several minutes, and a novelty
 solution in bash which takes about three hours or so.  The files are all
-named consistently: $language/$problem_number.$ext, (with exceptions,
-this time for the Erlang solutions, because of a tie between module
-names and filenames).  Some problems I have solved by hand; these
-solutions usually aren't present in the code.
+named consistently: $language/$problem_number.$ext, (with exceptions for
+languages which tie module names and filenames and don't allow module names to
+start with numbers, like Erlang and Limbo).  Some problems I have solved by
+hand; these solutions usually aren't present in the code.
 
 Everything in this repo is released into the public domain.  It's almost
 all straightforward application of basic principals, but if you somehow
