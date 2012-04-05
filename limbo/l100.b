@@ -16,7 +16,6 @@ include "sys.m"; sys: Sys; stderr: ref sys->FD;
 include "bufio.m"; bufio: Bufio; Iobuf: import bufio;
 include "string.m"; str: String;
 include "draw.m";
-include "math.m"; math: Math;
 
 L100: module {
 	init: fn(ctxt: ref Draw->Context, argv: list of string);
