@@ -42,9 +42,9 @@ subfn p1 { result = 1 }
 # Adding this definition cuts the execution time down to 0.05s:
 subfn p5 {
 	n := $1
-	np4s := ${expr ${expr $n 4 +} ${expr $n 4 +} '*'}
 	# p5 = ((n+4)^2 + 10) / 20
-	result = ${expr $np4s 10 + 20 /}
+	np4 := ${expr $n 4 +}
+	result = ${expr $np4 $np4 '*' 10 + 20 /}
 }
 
 a = $1
