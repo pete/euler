@@ -12,9 +12,10 @@ clean:
 a%: awk/%.awk
 	time awk -f $<
 
+a067: awk/067.awk
+	time awk -f awk/067.awk data/067.txt
 a099: awk/099.awk
 	time awk -F, -f awk/099.awk data/099.txt
-
 a102: awk/102.awk
 	time awk -F, -f awk/102.awk data/102.txt
 
@@ -34,22 +35,26 @@ e%: erlang/p%.erl
 # Limbo
 INFERNO_ROOT = $(HOME)/inferno
 INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)/euler
-EMU_FLAGS += -c1
+#EMU_FLAGS += -c1
 EMU_FLAGS += -r $(INFERNO_ROOT)
-l%: $(INFERNO_HOME)/l%.dis
-	time emu $(EMU_FLAGS) /usr/$(USER)/euler/$@
-
 LIMBO_FLAGS += -w
 LIMBO_FLAGS += -g
-$(INFERNO_HOME)/l%.dis: limbo/l%.b
+l%: limbo/l%.b
 	mkdir -p $(INFERNO_HOME)
-	limbo $(LIMBO_FLAGS) -o $@ $<
+	limbo $(LIMBO_FLAGS) -o $(INFERNO_HOME)/$@ $<
+	time emu $(EMU_FLAGS) /usr/$(USER)/euler/$@
 
 # The Inferno sh(1)
 i%: infernosh/%.sh
 	mkdir -p $(INFERNO_HOME)
 	cp $< $(INFERNO_HOME)/$@.sh
-	time emu sh /usr/$(USER)/euler/$@.sh
+	time emu $(EMU_FLAGS) sh /usr/$(USER)/euler/$@.sh
+
+i067: infernosh/067.sh
+	mkdir -p $(INFERNO_HOME)
+	cp $< $(INFERNO_HOME)/067.sh
+	cp data/067.txt $(INFERNO_HOME)
+	time emu $(EMU_FLAGS) sh -n -c '/usr/$(USER)/euler/067.sh < /usr/$(USER)/euler/067.txt'
 
 # Pure
 p%: pure/bin/%
