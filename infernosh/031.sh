@@ -1,5 +1,6 @@
 #!/dis/sh
 # How many different ways can £2 be made using any number of coins?
+# 0.11s without JIT, 0.04s with
 
 load std expr
 

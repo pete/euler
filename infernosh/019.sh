@@ -4,7 +4,7 @@
 # (1 Jan 1901 to 31 Dec 2000)?
 
 # A direct port of my bash solution for the same problem.  It takes about as
-# long to run.
+# long to run without JIT, faster by about 15% with JIT enabled.
 
 load std expr
 
