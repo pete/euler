@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # For which value of p  1000, is the number of solutions maximised?
-# 0.68s
+# 0.68s gawk, 0.57s mawk, 1.01s busybox awk
 
 BEGIN {
 	for(i = 1; i <= 998; i++)
