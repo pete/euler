@@ -55,6 +55,11 @@ i067: infernosh/067.sh
 	cp $< $(INFERNO_HOME)/067.sh
 	cp data/067.txt $(INFERNO_HOME)
 	time emu $(EMU_FLAGS) sh -n -c '/usr/$(USER)/euler/067.sh < /usr/$(USER)/euler/067.txt'
+i079: infernosh/079.sh
+	mkdir -p $(INFERNO_HOME)
+	cp $< $(INFERNO_HOME)/079.sh
+	cp data/079.txt $(INFERNO_HOME)
+	time emu $(EMU_FLAGS) sh -n -c '/usr/$(USER)/euler/079.sh < /usr/$(USER)/euler/079.txt'
 
 # Pure
 p%: pure/bin/%

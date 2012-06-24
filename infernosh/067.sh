@@ -2,10 +2,15 @@
 
 # Find the maximum total from the top to the bottom of the triangle.
 
-# 1.2s without JIT, 0.5s with.  Not going to beat the awk or Limbo solutions,
+# 1.2s without JIT, 0.56s with.  Not going to beat the awk or Limbo solutions,
 # but not shabby overall.
 
 load std expr
+
+# It adds 0.04s, but it's worth it to not have to wrap the line.
+fn addmax {
+	cur = $cur ${expr $y $x '<=' not $x '*' $x $y '<' not $y '*' + $n +}
+}
 
 # tac(1)
 getlines { lines = $line $lines }
@@ -19,15 +24,7 @@ for l in $lines {
 	(x prev) = $prev
 	for n in $l {
 		(y prev) = $prev
-		#if {ntest ${expr $x $y '>'}} {
-		#	cur = $cur ${expr $n $x +} 
-		#} {
-		#	cur = $cur ${expr $n $y +}
-		#}
-		# This is not much faster:
-		#cur = $cur ${expr $y $x '>' 1 - $x and $x $y '>' 1 - $y and +}
-		# ...but *this* cuts 1/6 of the execution time!
-		cur = $cur ${expr $y $x '<' not $x '*' $x $y '<' not $y '*' +}
+		addmax
 		x = $y
 	}
 	prev = $cur
