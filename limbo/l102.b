@@ -86,9 +86,6 @@ parser(in: chan of (int, string),
 
 	(cont, l) = <-in;
 	while(cont) {
-		# We're cheating a little here by assuming the commas instead
-		# of, e.g., using the Awk module, which has a decent chance of
-		# being way faster.
 		(x1, s) = str->toint(l, 10);
 		(y1, s) = str->toint(s[1:], 10);
 		(x2, s) = str->toint(s[1:], 10);
@@ -126,7 +123,7 @@ reader(out: chan of (int, string), fname: string)
 	out <-= (0, nil);
 }
 
-init(ctxt: ref Draw->Context, argv: list of string)
+init(nil: ref Draw->Context, nil: list of string)
 {
 	sys = load Sys Sys->PATH;
 	bufio = load Bufio Bufio->PATH;
