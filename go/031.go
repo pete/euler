@@ -1,6 +1,6 @@
 // How many different ways can £2 be made using any number of coins?
 
-// First actual Go program I have written.  May not look right.
+// First actual Go program I have written.  May not look right.  0m0.008s
 
 package main
 
