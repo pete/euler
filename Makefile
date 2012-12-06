@@ -6,7 +6,7 @@ stats:
 	bin/stats
 
 clean:
-	rm -f pure/bin/* c/bin/* tmp/*.beam
+	rm -f pure/bin/* c/bin/* tmp/*.beam go/bin/*
 
 # awk
 a%: awk/%.awk
@@ -25,6 +25,13 @@ c%: c/bin/%
 
 c/bin/%: c/%.c
 	${CC} ${CFLAGS} ${LDFLAGS} $< -o $@
+
+# Go
+g%: go/bin/%
+	time $<
+
+go/bin/%: go/%.go
+	go build -o $@ $<
 
 # Erlang
 e%: erlang/p%.erl
