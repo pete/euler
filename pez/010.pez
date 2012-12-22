@@ -1,6 +1,7 @@
 #! /usr/bin/env pez
 
 # Find the sum of all primes under 2,000,000.
+# 0.3s
 
 # There's an example of a sieve in Pez's doc/examples; I just modified it to
 # sum them instead of printing them.

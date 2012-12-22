@@ -44,6 +44,7 @@ INFERNO_ROOT = $(HOME)/inferno
 INFERNO_HOME = $(INFERNO_ROOT)/usr/$(USER)/euler
 EMU_FLAGS += -c1
 EMU_FLAGS += -r $(INFERNO_ROOT)
+EMU_FLAGS += -pmain=1073741824 -pheap=1073741824
 LIMBO_FLAGS += -w
 LIMBO_FLAGS += -g
 l%: limbo/l%.b
