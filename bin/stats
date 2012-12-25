@@ -29,7 +29,7 @@ langs = langs.to_a.map { |l,ss|
 		# s = colored(s) if(sols[o].length == 1 && l != 'all')
 		s = colored(s) if sols[o].length == 1
 		s
-	}
+	}.uniq!
 	[ss.size, "#{l}(#{ss.length.to_s})", ss.join(',')]
 }
 maxlen = langs.map { |c,l,*| l.length }.max

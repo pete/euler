@@ -6,7 +6,7 @@ stats:
 	bin/stats
 
 clean:
-	rm -f pure/bin/* c/bin/* tmp/*.beam go/bin/*
+	rm -f pure/bin/* c/bin/* tmp/*.beam go/bin/* limbo/*.dis limbo/*.sbl
 
 # awk
 a%: awk/%.awk
