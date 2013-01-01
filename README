@@ -1,6 +1,7 @@
-Sometimes I'll play with Project Euler as a way to learn languages, gauge
-relative speed, kick-start my brain for the day, or learn a thing about number
-theory.  Consequently, there are solutions for a large number of languages.
+Sometimes I'll play with Project Euler ( http://projecteuler.net/ ) as a
+way to learn languages, gauge relative speed, kick-start my brain for
+the day, or learn a thing about number theory.  Consequently, there are
+solutions for a large number of languages.
 
 Here are the solutions, there aren't that many, and they're not that
 good.  Some of them benchmark themselves, and some would be happier if
@@ -10,19 +11,20 @@ hardware, usually under a second) except my Pez solutions for #145 and
 #204, both of which (shamefully) take several minutes, and a novelty
 solution in bash which takes about three hours or so.  The files are all
 named consistently: $language/$problem_number.$ext, (with exceptions for
-languages which tie module names and filenames and don't allow module names to
-start with numbers, like Erlang and Limbo).  Some problems I have solved by
-hand; these solutions usually aren't present in the code.
+languages which tie module names and filenames and don't allow module
+names to start with numbers, like Erlang and Limbo).  Some problems I
+have solved by hand; these solutions usually aren't present in the code.
 
-Several of the solutions include "benchmark" information in the comments.  Your
-mileage will certainly vary, since the odds are incredibly small that you are
-running the same version of the same OS on the same CPU with the same memory and
-the same amount of load on the machine.  In fact, the times were produced on two
-different machines, and one of the machines went through some hardware changes.
-I do not think I need to warn you that the times presented should not be taken
-seriously, and that despite their often being presented with several significant
-digits, most of them should actually read only one of four ways:  "no time at
-all", "a few seconds", "a few minutes", or "forever".
+Several of the solutions include "benchmark" information in the
+comments.  Your mileage will certainly vary, since the odds are
+incredibly small that you are running the same version of the same OS on
+the same CPU with the same memory and the same amount of load on the
+machine.  In fact, the times were produced on two different machines,
+and one of the machines went through some hardware changes.  I do not
+think I need to warn you that the times presented should not be taken
+seriously, and that despite their often being presented with several
+significant digits, most of them should actually read only one of four
+ways: "no time at all", "a few seconds", "a few minutes", or "forever".
 
 Everything in this repo is released into the public domain.  It's almost
 all straightforward application of basic principles, but if you somehow
