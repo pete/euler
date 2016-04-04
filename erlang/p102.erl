@@ -117,4 +117,5 @@ main(_) ->
 	Checker = spawn_checker(Collector),
 	Parser = spawn_parser(Checker),
 	spawn_reader(Parser),
-	receive N -> io:format("~p\n", [N]) end.
+	receive N -> io:format("~p\n", [N]) end,
+	init:stop().

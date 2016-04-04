@@ -1,12 +1,6 @@
 % Find the sum of all the even-valued terms in the Fibonacci sequence which do
 % not exceed four million.
 
-% I do not know how to properly express myself in this language.  Expect
-% horrors.
-
-% Also, I'd like to thank the Erlang designer(s) for using a terrible comment
-% character.
-
 -module(p002).
 -export([seftil/1, main/1]).
 
@@ -25,4 +19,5 @@ seftil(N) ->
 
 main(_) ->
 	io:write(seftil(4000000)),
-	io:fwrite("\n").
+	io:fwrite("\n"),
+	init:stop().

@@ -22,14 +22,8 @@ largest_factor(N, F) when N rem F =:= 0 ->
 	largest_factor(N div F, F);
 largest_factor(N, F) ->
 	largest_factor(N, F + 2).
-% I'M NEW TO ERLANG!
-% 
-% ...
-%
-% ...
-%
-% Good night, everybody.
 
 main(_) ->
 	io:write(largest_factor(600851475143)),
-	io:fwrite("\n").
+	io:fwrite("\n"),
+	init:stop().
