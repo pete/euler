@@ -1,4 +1,5 @@
 LDFLAGS += -lm
+CFLAGS += -std=c99
 
 # General stuff
 
