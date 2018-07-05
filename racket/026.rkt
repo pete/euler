@@ -1,12 +1,13 @@
 #! /usr/bin/env racket
 #lang racket
 
-; Find the value of d < 1000 for which 1/d contains the longest recurring cycle in
-; its decimal fraction part.
+; Find the value of d < 1000 for which 1/d contains the longest recurring
+; cycle in its decimal fraction part.
 
-; So it has been long enough since I wrote any real Lisp code that it took a minute
-; to acclimate myself.  I wrote this top to bottom after doing the Go one, and you
-; can actually see the code make more sense as you approach the bottom of the file.
+; So it has been long enough since I wrote any real Lisp code that it took a
+; minute to acclimate myself.  I wrote this top to bottom after doing the Go
+; one, and you can actually see the code make more sense as you approach the
+; bottom of the file.
 
 ; Took like 10s to compile, ran in 3.1s, compared to the 1.7s in the Go version.
 ; Not exactly comparable, as a chunk of the algorithm is different.

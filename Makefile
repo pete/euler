@@ -15,6 +15,8 @@ a%: awk/%.awk
 
 a067: awk/067.awk
 	time awk -f awk/067.awk data/067.txt
+a089: awk/089.awk
+	time awk -F, -f awk/089.awk data/089.txt
 a099: awk/099.awk
 	time awk -F, -f awk/099.awk data/099.txt
 a102: awk/102.awk
@@ -64,6 +66,7 @@ i067: infernosh/067.sh
 	cp $< $(INFERNO_HOME)/067.sh
 	cp data/067.txt $(INFERNO_HOME)
 	time emu $(EMU_FLAGS) sh -n -c '/usr/$(USER)/euler/067.sh < /usr/$(USER)/euler/067.txt'
+
 i079: infernosh/079.sh
 	mkdir -p $(INFERNO_HOME)
 	cp $< $(INFERNO_HOME)/079.sh
