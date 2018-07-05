@@ -5,14 +5,14 @@
 # 	d[1] · d1[0] · d[100] · d[1000] · d[10000] · d[100000] · d[1000000]
 
 BEGIN {
-	dumb_version()
+	#dumb_version()
 	only_slightly_less_dumb_version()
 }
 
 # The dumb version looks uninteresting.
 # In fact, as an algorithm on its own, it is.
 # But it's interesting to run it under different awks, because they show wildly
-# different performance by allocating a 1,000,005-character string piece by
+# different performance when allocating a 1,000,005-character string piece by
 # piece.
 # On the same machine:
 # 	mawk:        00:12.6 (4.4 user, 8.1 sys)
@@ -41,11 +41,11 @@ function only_slightly_less_dumb_version() {
 	i = 10
 	r = 1
 	while(c < 1000001) {
-		if(a + length(i) >= c) {
-			r *= substr(i, c - a, 1)
+		a += length(i)
+		if(a >= c) {
+			r *= substr(i, length(i) + c - a, 1)
 			c *= 10
 		}
-		a += length(i)
 		i++
 	}
 	print r
